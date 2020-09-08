@@ -55,7 +55,7 @@ def insta_details(urls):
             videoViews = 0
             videoLikes = 0
         time = browser.find_element_by_css_selector('a time').text
-        title = deEmojify(browser.title)
+        title = deEmojify(browser.title[25:])
         post_details.append({"title":title,"Video Likes":videoLikes,"Video Views":videoViews,"Picture Post Likes":PicturePostlikes,"time":time})
     keys = post_details[0].keys()
     with open("data.csv","w",newline = '') as csvfile:
