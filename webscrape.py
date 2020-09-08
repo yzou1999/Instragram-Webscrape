@@ -37,16 +37,26 @@ def deEmojify(text):
 def insta_details(urls):
     """Take a post url and return post details"""
     browser = webdriver.Chrome(PATH)
+    browser.maximize_window()
     post_details = []
     for link in urls:
         browser.get(link)
         try:
-            likes = browser.find_element_by_class_name("vcOH2").text
+            #videoLikes = browser.find_elements_by_class_name("_690y5")
+            videoViews = browser.find_element_by_class_name("vcOH2").text
+            scroll_down = "window.scrollTo(0, document.body.scrollHeight);"
+            browser.execute_script(scroll_down)
+            browser.find_element_by_class_name("vcOH2").click()
+            xpath_view = '/html/body/div[1]/section/main/div/div[1]/article/div[3]/section[2]/div/div/div[4]/span'
+            videoLikes = browser.find_element_by_xpath(xpath_view).text
+            PicturePostlikes = 0
         except:
-            likes = browser.find_element_by_class_name("Nm9Fw").text
+            PicturePostlikes = browser.find_element_by_class_name("Nm9Fw").text
+            videoViews = 0
+            videoLikes = 0
         time = browser.find_element_by_css_selector('a time').text
         title = deEmojify(browser.title)
-        post_details.append({"title":title,"likes/views":likes,"time":time})
+        post_details.append({"title":title,"Video Likes":videoLikes,"Video Views":videoViews,"Picture Post Likes":PicturePostlikes,"time":time})
     keys = post_details[0].keys()
     with open("data.csv","w",newline = '') as csvfile:
         dict_writer = csv.DictWriter(csvfile, keys)
